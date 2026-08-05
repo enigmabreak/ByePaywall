@@ -61,7 +61,7 @@ cs_default = function (bg2csData = '') {
 
     if (matchDomain('theinformation.com')) {
       let url = window.location.href;
-      if (url.includes('/articles/')) {
+      if (url.includes('/articles/') || url.includes('/newsletters/')) {
         getArchive(url, 'h1', {rm_attrib: 'none'}, 'div[class*="article-body"], article', '', 'div[class*="article-body"], article', 'body');
       }
       return;
@@ -687,16 +687,22 @@ cs_default = function (bg2csData = '') {
           document.querySelectorAll('div#o-topper [style*="color:rgb(255, 255, 255);"]').forEach(e => e.style.color = 'unset');
           // Fix Big Read hero images: center them and make them responsive
           document.querySelectorAll('figure[style], div#o-topper figure, figure.article-image').forEach(e => {
-            e.style.cssText = 'max-width: 700px; margin: 20px auto; display: block;';
+            e.style.cssText = 'max-width: 700px; margin: 20px auto; display: block; padding-bottom: 0 !important;';
           });
           document.querySelectorAll('figure img').forEach(e => {
             if (!e.style.width) e.style.cssText = 'width: 100%; height: auto; display: block;';
+            // Remove padding-bottom from parent containers used for aspect ratio, which pushes captions down
+            if (e.parentNode && e.parentNode.style) e.parentNode.style.paddingBottom = '0';
+            if (e.parentNode && e.parentNode.parentNode && e.parentNode.parentNode.style) e.parentNode.parentNode.style.paddingBottom = '0';
           });
           // Move the header image between subtitle and authors
-          let heroFigure = document.querySelector('div#o-topper figure, figure.article-image, div.o-topper__visual figure, .topper__visual figure, figure.topper__figure, figure');
+          let heroVisual = document.querySelector('.o-topper__visual, .article__visual, .topper__visual, figure.article-image, div#o-topper figure, figure');
           let standfirst = document.querySelector('.o-topper__standfirst, [data-trackable="standfirst"], .article__standfirst, .standfirst, div[class*="standfirst"]');
-          if (standfirst && heroFigure && standfirst.nextSibling !== heroFigure) {
-            standfirst.after(heroFigure);
+          if (standfirst && heroVisual && standfirst.nextSibling !== heroVisual) {
+            standfirst.after(heroVisual);
+            heroVisual.style.display = 'block';
+            heroVisual.style.margin = '20px auto';
+            heroVisual.style.float = 'none';
           }
           // Fix o-topper (Big Read header area) to have proper centered layout
           let topper = document.querySelector('div#o-topper');
