@@ -686,12 +686,18 @@ cs_default = function (bg2csData = '') {
           document.querySelectorAll('div[style*="grid-template-areas"], article#site-content').forEach(e => e.style = 'max-width: 700px; margin: 0 auto; padding: 0 20px;');
           document.querySelectorAll('div#o-topper [style*="color:rgb(255, 255, 255);"]').forEach(e => e.style.color = 'unset');
           // Fix Big Read hero images: center them and make them responsive
-          document.querySelectorAll('figure[style], div#o-topper figure').forEach(e => {
+          document.querySelectorAll('figure[style], div#o-topper figure, figure.article-image').forEach(e => {
             e.style.cssText = 'max-width: 700px; margin: 20px auto; display: block;';
           });
           document.querySelectorAll('figure img').forEach(e => {
             if (!e.style.width) e.style.cssText = 'width: 100%; height: auto; display: block;';
           });
+          // Move the header image between subtitle and authors
+          let heroFigure = document.querySelector('div#o-topper figure, figure.article-image, div.o-topper__visual figure, .topper__visual figure, figure.topper__figure, figure');
+          let standfirst = document.querySelector('.o-topper__standfirst, [data-trackable="standfirst"], .article__standfirst, .standfirst, div[class*="standfirst"]');
+          if (standfirst && heroFigure && standfirst.nextSibling !== heroFigure) {
+            standfirst.after(heroFigure);
+          }
           // Fix o-topper (Big Read header area) to have proper centered layout
           let topper = document.querySelector('div#o-topper');
           if (topper) {
