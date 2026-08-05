@@ -61,7 +61,7 @@ cs_default = function (bg2csData = '') {
 
     if (matchDomain('theinformation.com')) {
       let url = window.location.href;
-      if (url.includes('/articles/') || url.includes('/newsletters/')) {
+      if (url.match(/\/(articles|newsletters|briefings|columns|opinion|features|interviews|pro|creators|roundups)\//)) {
         getArchive(url, 'h1', {rm_attrib: 'none'}, 'div[class*="article-body"], article', '', 'div[class*="article-body"], article', 'body');
       }
       return;
